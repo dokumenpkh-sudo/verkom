@@ -15,36 +15,90 @@
       font-family: 'Segoe UI', 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #0d4715 0%, #1a6b26 100%);
       min-height: 100vh;
+    }
+    
+    /* Navbar */
+    .navbar {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .logo-nav {
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 10px;
     }
     
-    .container {
-      max-width: 500px;
-      margin: 20px;
-      text-align: center;
+    .logo-nav span {
+      font-size: 24px;
     }
     
-    .card {
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+    .logo-nav h2 {
+      font-size: 18px;
+      color: #1a6b26;
     }
     
-    .header {
-      background: linear-gradient(135deg, #0d4715 0%, #1a6b26 100%);
+    .nav-menu {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .nav-menu a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-menu a:hover {
+      color: #1a6b26;
+    }
+    
+    .btn-login {
+      background: #1a6b26;
       color: white;
-      padding: 30px 20px;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
     }
     
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+      color: white;
+    }
+    
+    .hero h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .hero p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    
+    /* Logo Container */
     .logo-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 20px;
-      margin-bottom: 20px;
+      gap: 30px;
+      margin: 30px 0;
       flex-wrap: wrap;
     }
     
@@ -52,155 +106,332 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      padding: 15px 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(5px);
     }
     
     .logo-circle {
-      width: 50px;
-      height: 50px;
-      background: rgba(255,255,255,0.15);
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.25);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
+      font-size: 32px;
     }
     
     .logo-label {
-      font-size: 9px;
-      opacity: 0.9;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
     }
     
-    .header h1 {
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-    
-    .header p {
-      font-size: 12px;
-      opacity: 0.9;
-    }
-    
-    .badge-instansi {
-      display: inline-block;
-      background: rgba(255,255,255,0.2);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 10px;
-      margin-top: 12px;
-    }
-    
-    .content {
-      padding: 30px 25px;
-    }
-    
-    .loading-spinner {
-      margin: 20px auto;
-      width: 50px;
-      height: 50px;
-      border: 4px solid #e9ecef;
-      border-top: 4px solid #1a6b26;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .loading-text {
-      color: #2c3e50;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-    
-    .manual-link {
+    /* Cards Section */
+    .cards-section {
+      background: white;
+      border-radius: 30px 30px 0 0;
+      padding: 40px 20px;
       margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #e9ecef;
     }
     
-    .manual-link p {
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .section-title h2 {
+      color: #1a6b26;
+      font-size: 24px;
+    }
+    
+    .section-title p {
       color: #6c757d;
-      font-size: 12px;
+    }
+    
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .menu-card {
+      background: #f8f9fa;
+      border-radius: 16px;
+      padding: 25px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: 1px solid #e9ecef;
+    }
+    
+    .menu-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .menu-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+    
+    .menu-card h3 {
+      color: #1a6b26;
       margin-bottom: 10px;
     }
     
-    .btn-link {
-      display: inline-block;
-      background: #1a6b26;
-      color: white;
-      text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
+    .menu-card p {
+      color: #6c757d;
+      font-size: 13px;
+      margin-bottom: 20px;
     }
     
-    .btn-link:hover {
+    .menu-btn {
+      background: #1a6b26;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    
+    .menu-btn:hover {
       background: #0d4715;
     }
     
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      overflow: auto;
+    }
+    
+    .modal-content {
+      background: white;
+      margin: 20px auto;
+      width: 95%;
+      max-width: 1000px;
+      border-radius: 20px;
+      overflow: hidden;
+      animation: modalSlideIn 0.3s ease;
+    }
+    
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, #0d4715 0%, #1a6b26 100%);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .close-modal {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .close-modal:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .modal-body {
+      height: 70vh;
+      min-height: 500px;
+    }
+    
+    .modal-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Footer */
     .footer {
-      background: #f8f9fa;
-      padding: 12px;
+      background: #2c3e50;
+      color: white;
       text-align: center;
-      font-size: 10px;
-      color: #6c757d;
+      padding: 20px;
+      font-size: 12px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero h1 { font-size: 22px; }
+      .logo-circle { width: 45px; height: 45px; font-size: 24px; }
+      .logo-label { font-size: 9px; }
+      .menu-card { padding: 20px; }
+      .modal-body { height: 80vh; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card">
-      <div class="header">
-        <div class="logo-container">
-          <div class="logo-item">
-            <div class="logo-circle">🦅</div>
-            <div class="logo-label">REPUBLIK INDONESIA</div>
-          </div>
-          <div class="logo-item">
-            <div class="logo-circle">🤝</div>
-            <div class="logo-label">KEMENTERIAN SOSIAL</div>
-          </div>
-          <div class="logo-item">
-            <div class="logo-circle">🏠</div>
-            <div class="logo-label">PKH</div>
-          </div>
-          <div class="logo-item">
-            <div class="logo-circle">📋</div>
-            <div class="logo-label">VERIFIKASI</div>
-          </div>
-        </div>
-        <h1>✅ PROGRAM KELUARGA HARAPAN (PKH)</h1>
-        <p>Verifikasi Komitmen • Lansia & Disabilitas • Kecamatan Panggul</p>
-        <div class="badge-instansi">DINAS SOSIAL | KEMENTERIAN SOSIAL RI | TAHUN 2026</div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo-nav">
+      <span>🏠</span>
+      <h2>PKH Kec. Panggul</h2>
+    </div>
+    <div class="nav-menu">
+      <a href="#">Beranda</a>
+      <a href="#">Data KPM</a>
+      <a href="#">Laporan</a>
+      <a href="#">Bantuan</a>
+    </div>
+    <button class="btn-login" onclick="openModal()">Login Petugas</button>
+  </nav>
+  
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="logo-container">
+      <div class="logo-item">
+        <div class="logo-circle">🦅</div>
+        <div class="logo-label">REPUBLIK INDONESIA</div>
+      </div>
+      <div class="logo-item">
+        <div class="logo-circle">🤝</div>
+        <div class="logo-label">KEMENTERIAN SOSIAL</div>
+      </div>
+      <div class="logo-item">
+        <div class="logo-circle">🏠</div>
+        <div class="logo-label">PKH</div>
+      </div>
+      <div class="logo-item">
+        <div class="logo-circle">📋</div>
+        <div class="logo-label">VERIFIKASI</div>
+      </div>
+    </div>
+    <h1>PROGRAM KELUARGA HARAPAN (PKH)</h1>
+    <p>Verifikasi Komitmen • Lansia & Disabilitas • Kecamatan Panggul</p>
+    <div style="margin-top: 15px;">
+      <span style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 12px;">DINAS SOSIAL | KEMENTERIAN SOSIAL RI | TAHUN 2026</span>
+    </div>
+  </div>
+  
+  <!-- Menu Cards -->
+  <div class="cards-section">
+    <div class="section-title">
+      <h2>Layanan Verifikasi PKH</h2>
+      <p>Pilih layanan verifikasi komitmen yang tersedia</p>
+    </div>
+    
+    <div class="menu-grid">
+      <div class="menu-card" onclick="openModal()">
+        <div class="menu-icon">👵</div>
+        <h3>Verifikasi Lansia</h3>
+        <p>Upload dokumentasi komitmen peserta lansia PKH</p>
+        <button class="menu-btn">Mulai Verifikasi →</button>
       </div>
       
-      <div class="content">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">⏳ Mengalihkan ke halaman verifikasi...</div>
-        
-        <div class="manual-link">
-          <p>Jika tidak otomatis teralihkan, klik tombol di bawah:</p>
-          <a href="https://script.google.com/macros/s/AKfycbwY4W_KWquT1fwfCtWlSeSUCd0Vj05BE5LLdI-E02suE3RVNu3-hEvUdYAvXnTaGp8/exec" class="btn-link">
-            📋 Buka Form Verifikasi PKH
-          </a>
-        </div>
+      <div class="menu-card" onclick="openModal()">
+        <div class="menu-icon">♿</div>
+        <h3>Verifikasi Disabilitas</h3>
+        <p>Upload dokumentasi komitmen peserta disabilitas PKH</p>
+        <button class="menu-btn">Mulai Verifikasi →</button>
       </div>
       
-      <div class="footer">
-        <p>© 2026 - Dinas Sosial Kabupaten Trenggalek | Data terekam otomatis</p>
+      <div class="menu-card" onclick="openModal()">
+        <div class="menu-icon">📊</div>
+        <h3>Rekap Data</h3>
+        <p>Lihat laporan hasil verifikasi komitmen</p>
+        <button class="menu-btn">Lihat Laporan →</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <div class="footer">
+    <p>© 2026 - Dinas Sosial Kabupaten Trenggalek | Program Keluarga Harapan (PKH) Kecamatan Panggul</p>
+    <p style="margin-top: 8px; opacity: 0.7;">Data terekam otomatis • Laporan real-time • Verifikasi akuntabel</p>
+  </div>
+  
+  <!-- Modal untuk form Google Apps Script -->
+  <div id="verifikasiModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>
+          <span>📋</span> 
+          Verifikasi Komitmen PKH - Kecamatan Panggul
+        </h3>
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <iframe src="https://script.google.com/macros/s/AKfycbwY4W_KWquT1fwfCtWlSeSUCd0Vj05BE5LLdI-E02suE3RVNu3-hEvUdYAvXnTaGp8/exec" title="Form Verifikasi PKH">
+          Browser Anda tidak mendukung iframe.
+        </iframe>
       </div>
     </div>
   </div>
   
   <script>
-    // Redirect otomatis ke form Google Apps Script setelah 1 detik
-    setTimeout(function() {
-      window.location.href = "https://script.google.com/macros/s/AKfycbwY4W_KWquT1fwfCtWlSeSUCd0Vj05BE5LLdI-E02suE3RVNu3-hEvUdYAvXnTaGp8/exec";
-    }, 1000);
+    function openModal() {
+      var modal = document.getElementById('verifikasiModal');
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+      var modal = document.getElementById('verifikasiModal');
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Tutup modal jika klik di luar area modal
+    window.onclick = function(event) {
+      var modal = document.getElementById('verifikasiModal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+    
+    // Tombol ESC untuk menutup modal
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
   </script>
 </body>
 </html>
