@@ -59,6 +59,7 @@
       color: #2c3e50;
       font-weight: 500;
       transition: color 0.2s;
+      cursor: pointer;
     }
     
     .nav-menu a:hover {
@@ -73,6 +74,11 @@
       border-radius: 25px;
       cursor: pointer;
       font-weight: 600;
+      transition: background 0.2s;
+    }
+    
+    .btn-login:hover {
+      background: #0d4715;
     }
     
     /* Hero Section */
@@ -253,6 +259,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      font-size: 16px;
     }
     
     .close-modal {
@@ -276,12 +283,88 @@
     .modal-body {
       height: 70vh;
       min-height: 500px;
+      position: relative;
     }
     
     .modal-body iframe {
       width: 100%;
       height: 100%;
       border: none;
+    }
+    
+    /* Loading Overlay */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e9ecef;
+      border-top: 4px solid #1a6b26;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: #2c3e50;
+      font-size: 14px;
+    }
+    
+    .loading-subtext {
+      color: #6c757d;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .toast.show {
+      display: flex;
+      animation: fadeInUp 0.3s ease;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
     }
     
     /* Footer */
@@ -304,6 +387,7 @@
       .logo-label { font-size: 9px; }
       .menu-card { padding: 20px; }
       .modal-body { height: 80vh; }
+      .modal-header h3 { font-size: 14px; }
     }
   </style>
 </head>
@@ -315,12 +399,12 @@
       <h2>PKH Kec. Panggul</h2>
     </div>
     <div class="nav-menu">
-      <a href="#">Beranda</a>
-      <a href="#">Data KPM</a>
-      <a href="#">Laporan</a>
-      <a href="#">Bantuan</a>
+      <a onclick="openModal()">Beranda</a>
+      <a onclick="openModal()">Data KPM</a>
+      <a onclick="openModal()">Laporan</a>
+      <a href="#" id="bantuanLink">Bantuan</a>
     </div>
-    <button class="btn-login" onclick="openModal()">Login Petugas</button>
+    <button class="btn-login" onclick="openModal()">Verifikasi KPM</button>
   </nav>
   
   <!-- Hero Section -->
@@ -372,11 +456,11 @@
         <button class="menu-btn">Mulai Verifikasi →</button>
       </div>
       
-      <div class="menu-card" onclick="openModal()">
+      <div class="menu-card" id="laporanCard">
         <div class="menu-icon">📊</div>
         <h3>Rekap Data</h3>
         <p>Lihat laporan hasil verifikasi komitmen</p>
-        <button class="menu-btn">Lihat Laporan →</button>
+        <button class="menu-btn" id="laporanBtn">Lihat Laporan →</button>
       </div>
     </div>
   </div>
@@ -397,23 +481,136 @@
         </h3>
         <button class="close-modal" onclick="closeModal()">&times;</button>
       </div>
-      <div class="modal-body">
-        <iframe src="https://script.google.com/macros/s/AKfycbwY4W_KWquT1fwfCtWlSeSUCd0Vj05BE5LLdI-E02suE3RVNu3-hEvUdYAvXnTaGp8/exec" title="Form Verifikasi PKH">
-          Browser Anda tidak mendukung iframe.
-        </iframe>
+      <div class="modal-body" id="modalBody">
+        <div class="loading-overlay" id="loadingOverlay">
+          <div class="spinner"></div>
+          <div class="loading-text">⏳ Memuat form verifikasi...</div>
+          <div class="loading-subtext">Mohon tunggu sebentar</div>
+        </div>
+        <iframe id="formIframe" src="about:blank" title="Form Verifikasi PKH"></iframe>
       </div>
     </div>
   </div>
   
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <span>ℹ️</span>
+    <span id="toastMessage">Membuka di tab baru...</span>
+  </div>
+  
   <script>
-    function openModal() {
-      var modal = document.getElementById('verifikasiModal');
-      modal.style.display = 'block';
-      document.body.style.overflow = 'hidden';
+    // URL Form Google Apps Script
+    var FORM_URL = "https://script.google.com/macros/s/AKfycbwY4W_KWquT1fwfCtWlSeSUCd0Vj05BE5LLdI-E02suE3RVNu3-hEvUdYAvXnTaGp8/exec";
+    
+    var timeoutId = null;
+    var isNewTabOpened = false;
+    var iframeLoaded = false;
+    
+    // Fungsi untuk menampilkan toast notification
+    function showToast(message, duration = 3000) {
+      var toast = document.getElementById('toast');
+      var toastMessage = document.getElementById('toastMessage');
+      toastMessage.innerHTML = message;
+      toast.classList.add('show');
+      setTimeout(function() {
+        toast.classList.remove('show');
+      }, duration);
     }
     
+    // Fungsi buka di tab baru
+    function openInNewTab() {
+      if (!isNewTabOpened) {
+        isNewTabOpened = true;
+        window.open(FORM_URL, '_blank');
+        showToast('🔗 Membuka form di tab baru karena kendala teknis', 4000);
+      }
+    }
+    
+    // Fungsi untuk memuat iframe dengan timeout
+    function loadIframeWithTimeout() {
+      var iframe = document.getElementById('formIframe');
+      var loadingOverlay = document.getElementById('loadingOverlay');
+      var modal = document.getElementById('verifikasiModal');
+      
+      // Reset status
+      iframeLoaded = false;
+      isNewTabOpened = false;
+      
+      // Set timeout 5 detik - jika iframe belum load, buka tab baru
+      timeoutId = setTimeout(function() {
+        if (!iframeLoaded) {
+          console.log("Iframe loading timeout, switching to new tab");
+          // Hapus loading overlay
+          loadingOverlay.style.display = 'none';
+          // Tutup modal
+          closeModal();
+          // Buka tab baru
+          openInNewTab();
+        }
+      }, 5000);
+      
+      // Set iframe source
+      iframe.src = FORM_URL;
+      
+      // Event listener untuk iframe load
+      iframe.onload = function() {
+        iframeLoaded = true;
+        clearTimeout(timeoutId);
+        // Sembunyikan loading overlay dengan animasi
+        loadingOverlay.style.opacity = '0';
+        setTimeout(function() {
+          loadingOverlay.style.display = 'none';
+        }, 300);
+      };
+      
+      // Event listener untuk error iframe
+      iframe.onerror = function() {
+        console.log("Iframe loading error");
+        if (!iframeLoaded) {
+          clearTimeout(timeoutId);
+          loadingOverlay.style.display = 'none';
+          closeModal();
+          openInNewTab();
+        }
+      };
+    }
+    
+    // Buka modal
+    function openModal() {
+      var modal = document.getElementById('verifikasiModal');
+      var iframe = document.getElementById('formIframe');
+      var loadingOverlay = document.getElementById('loadingOverlay');
+      
+      // Reset iframe dan loading
+      iframe.src = 'about:blank';
+      loadingOverlay.style.display = 'flex';
+      loadingOverlay.style.opacity = '1';
+      
+      // Tampilkan modal
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      
+      // Muat iframe dengan timeout
+      loadIframeWithTimeout();
+    }
+    
+    // Tutup modal
     function closeModal() {
       var modal = document.getElementById('verifikasiModal');
+      var iframe = document.getElementById('formIframe');
+      
+      // Batalkan timeout jika masih berjalan
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      
+      // Reset iframe
+      iframe.src = 'about:blank';
+      iframeLoaded = false;
+      isNewTabOpened = false;
+      
+      // Tutup modal
       modal.style.display = 'none';
       document.body.style.overflow = 'auto';
     }
@@ -432,6 +629,23 @@
         closeModal();
       }
     });
+    
+    // Handle untuk tombol Laporan (membuka di tab baru langsung)
+    document.getElementById('laporanCard').onclick = function() {
+      window.open(FORM_URL, '_blank');
+      showToast('📊 Membuka halaman verifikasi di tab baru', 3000);
+    };
+    
+    document.getElementById('laporanBtn').onclick = function(e) {
+      e.stopPropagation();
+      window.open(FORM_URL, '_blank');
+      showToast('📊 Membuka halaman verifikasi di tab baru', 3000);
+    };
+    
+    document.getElementById('bantuanLink').onclick = function(e) {
+      e.preventDefault();
+      showToast('📞 Hubungi Koordinator PKH Kec. Panggul: 0812-3456-7890', 5000);
+    };
   </script>
 </body>
 </html>
